@@ -603,7 +603,7 @@ function bitly_oauth_access_token($code, $redirect) {
   $params['client_secret'] = bitly_secret;
   $params['code'] = $code;
   $params['redirect_uri'] = $redirect;
-  $output = json_decode(bitly_post_curl($url, $params));
+  $output = bitly_post_curl($url, $params);
   $parts = explode('&', $output);
   foreach ($parts as $part) {
     $bits = explode('=', $part);
