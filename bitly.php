@@ -764,6 +764,50 @@ function bitly_v3_user_realtime_links($access_token) {
 }
 
 /**
+ * Returns entries from a user's link history in reverse chronological order.
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *   A multidimensional numbered associative array containing:
+ *   - link - the bitly link specific to this user and this long_url.
+ *   - aggregate_link - the global bitly identifier for this long_url.
+ *   - long_url - the original long URL.
+ *   - archived - a true/false value indicating whether the user has archived this link.
+ *   - private - a true/false value indicating whether the user has made this link private.
+ *   - created_at - an integer unix epoch indicating when this link was shortened/encoded.
+ *   - user_ts - a user-provided timestamp for when this link was shortened/encoded, used for backfilling data.
+ *   - modified_at - an integer unix epoch indicating when this link's metadata was last edited.
+ *   - title - the title for this link.
+ *
+ * @see http://dev.bitly.com/user_info.html#v3_user_link_history
+ */
+function bitly_v3_user_link_history($access_token) {
+  // $results = bitly_v3_user_link_history('BITLY_SUPPLIED_ACCESS_TOKEN');
+  $results = array();
+  $url = bitly_oauth_api . "user/link_history?format=json&access_token=" . $access_token;
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'link_history'})) {
+    foreach ($output->{'data'}->{'link_history'} as $link_history) {
+      $rec = array();
+      $rec['aggregate_link'] = $link_history->{'aggregate_link'};
+      $rec['archived'] = $link_history->{'archived'};
+      $rec['client_id'] = $link_history->{'client_id'};
+      $rec['created_at'] = $link_history->{'created_at'};
+      $rec['link'] = $link_history->{'link'};
+      $rec['long_url'] = $link_history->{'long_url'};
+      $rec['modified_at'] = $link_history->{'modified_at'};
+      $rec['private'] = $link_history->{'private'};
+      $rec['title'] = $link_history->{'title'};
+      $rec['user_ts'] = $link_history->{'user_ts'};
+      array_push($results, $rec);
+    }
+  }
+  return $results;
+}
+
+/**
  * Make a GET call to the bit.ly API.
  *
  * @param $uri
