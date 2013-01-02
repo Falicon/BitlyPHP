@@ -30,7 +30,6 @@ define('bitly_clientid' , 'YOUR_BITLY_ASSIGNED_CLIENT_ID_FOR_OAUTH');
  */
 define('bitly_secret' , 'YOUR_BITLY_ASSIGNED_CLIENT_SECRET_FOR_OAUTH');
 
-
 /**
  * The URI of the standard bitly v3 API.
  */
@@ -802,6 +801,343 @@ function bitly_v3_user_link_history($access_token) {
       $rec['title'] = $link_history->{'title'};
       $rec['user_ts'] = $link_history->{'user_ts'};
       array_push($results, $rec);
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns a specified number of "high-value" bitly links that are popular
+ * across bitly at this particular moment.
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @param $limit
+ *   the maxiumum number of high-value links to return.
+ *
+ * @return
+ *   An array of bit.ly links
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_highvalue($access_token, $limit = 5) {
+  $results = array();
+  $url = bitly_oauth_api . "highvalue?access_token=" . $access_token . "&limit=" . $limit;
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'values'})) {
+    foreach ($output->{'data'}->{'values'} as $link) {
+      array_push($results, $link);
+    }
+  }
+  return $results;
+}
+
+/**
+ * Search links receiving clicks across bitly by content, language, location, and more.
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @param $query
+ *   string to query for
+ *
+ * @param $limit
+ *   the maximum number of links to return.
+ *
+ * @param $offset
+ *   which result to start with (defaults to 0)
+ *
+ * @param $domain
+ *   restrict results to this web domain
+ *
+ * @param $lang
+ *   favor results in this language (two letter ISO code)
+ *
+ * @param $cities
+ *   show links active in this city (ordered like country-state-city, e.g. us-il-chicago)
+ *
+ * @param $fields
+ *   which fields to return in the response (comma-separated).
+ *   May be any of: domain, initial_epoch, h2, h3, site, lastindexed, keywords,
+ *   last_indexed_epoch, title, initial, summaryText, content, score, summaryTitle,
+ *    type, description, cities, lang, url, referrer, aggregate_link, lastseen, page,
+ *    ogtitle aggregate_link. By default, all will be returned.
+ *
+ * @return
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_search($access_token, $query, $limit = 10, $offset = 0, $domain = '', $lang = '', $cities = '', $fields = array()) {
+  $results = array();
+  $url = bitly_oauth_api . "search?access_token=" . $access_token . "&query=" . urlencode($query) . "&limit=" . $limit . "&offset=" . $offset;
+  if ($domain != '') {
+    $url .= '&domain=' . urlencode($domain);
+  }
+  if ($lang != '') {
+    $url .= '&lang=' . urlencode($lang);
+  }
+  if ($cities != '') {
+    $url .= '&cities=' . urlencode($cities);
+  }
+  if (!empty($fields)) {
+    # only return certain fields
+    $url .= '&fields=' . implode(',', $fields);
+  }
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'results'})) {
+    foreach ($output->{'data'}->{'results'} as $result) {
+      $res = array();
+      foreach ($result as $key => $val) {
+        $res[$key] = $val;
+      }
+      array_push($results, $res);
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns phrases that are receiving an uncharacteristically high volume of
+ * click traffic, and the individual links (hashes) driving traffic to pages
+ * containing these phrases.
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_realtime_bursting_phrases($access_token) {
+  $results = array();
+  $url = bitly_oauth_api . "realtime/bursting_phrases?access_token=" . $access_token;
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'phrases'})) {
+    foreach ($output->{'data'}->{'phrases'} as $phrase) {
+      $res = array();
+      $res['std'] = $phrase->{'std'};
+      $res['ghashes'] = array();
+      foreach($phrase->{'ghashes'} as $ghashes) {
+        $temp = array();
+        $temp['visitors'] = $ghashes->{'visitors'};
+        $temp['ghash'] = $ghashes->{'ghash'};
+        array_push($res['ghashes'], $temp);
+      }
+      $res['N'] = $phrase->{'N'};
+      $res['rate'] = $phrase->{'rate'};
+      $res['urls'] = array();
+      foreach($phrase->{'urls'} as $urls) {
+        $temp = array();
+        $temp['visitors'] = $urls->{'visitors'};
+        $temp['aggregate_url'] = $urls->{'aggregate_url'};
+        array_push($res['urls'], $temp);
+      }
+      $res['phrase'] = $phrase->{'phrase'};
+      $res['mean'] = $phrase->{'mean'};
+      array_push($results, $res);
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns phrases that are receiving a consistently high volume of click
+ * traffic, and the individual links (hashes) driving traffic to pages
+ * containing these phrases.
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_realtime_hot_phrases($access_token) {
+  $results = array();
+  $url = bitly_oauth_api . "realtime/bursting_phrases?access_token=" . $access_token;
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'phrases'})) {
+    $results['lag'] = $output->{'data'}->{'lag'};
+    $results['time'] = $output->{'data'}->{'time'};
+    $results['phrases'] = array();
+    foreach ($output->{'data'}->{'phrases'} as $phrase) {
+      $res = array();
+      $res['phrase'] = $phrase->{'phrase'};
+      $res['rate'] = $phrase->{'rate'};
+      $res['ghashes'] = array();
+      foreach($phrase->{'ghashes'} as $ghashes) {
+        $temp = array();
+        $temp['visitors'] = $ghashes->{'visitors'};
+        $temp['ghash'] = $ghashes->{'ghash'};
+        array_push($res['ghashes'], $temp);
+      }
+      array_push($results['phrases'], $res);
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns the click rate for content containing a specified phrase.
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_realtime_clickrate($access_token, $phrase) {
+  $results = array();
+  $url = bitly_oauth_api . "realtime/clickrate?access_token=" . $access_token . "&phrase=" . urlencode($phrase);
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'phrase'})) {
+    $results['phrase'] = $output->{'data'}->{'phrase'};
+    $results['rate'] = $output->{'data'}->{'rate'};
+    $results['lag'] = $output->{'data'}->{'lag'};
+    $results['time'] = $output->{'data'}->{'time'};
+  }
+  return $results;
+}
+
+/**
+ * Returns metadata about a single bitly link.
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_link_info($access_token, $link) {
+  $results = array();
+  $url = bitly_oauth_api . "link/info?access_token=" . $access_token . "&link=" . urlencode($link);
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'original_url'})) {
+    foreach ($output->{'data'} as $key=>$val) {
+      if (!is_array($val)) {
+        $results[$key] = $val;
+      }
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns the “main article” from the linked page, as determined by the
+ * content extractor, in either HTML or plain text format
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_link_content($access_token, $link) {
+  $results = array();
+  $url = bitly_oauth_api . "link/content?access_token=" . $access_token . "&link=" . urlencode($link);
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'content'})) {
+    $results['content'] = $output->{'data'}->{'content'};
+    $results['content_type'] = $output->{'data'}->{'content_type'};
+  }
+  return $results;
+}
+
+/**
+ * Returns the detected categories for a document, in descending order of
+ * confidence
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_link_category($access_token, $link) {
+  $results = array();
+  $url = bitly_oauth_api . "link/category?access_token=" . $access_token . "&link=" . urlencode($link);
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'categories'})) {
+    foreach ($output->{'data'}->{'categories'} as $category) {
+      array_push($results, $category);
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns the "social score" for a specified bitly link
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *   An associative array
+ *     - The key is the link
+ *     - The value is the score
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_link_social($access_token, $link) {
+  $results = array();
+  $url = bitly_oauth_api . "link/social?access_token=" . $access_token . "&link=" . urlencode($link);
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'social_scores'})) {
+    foreach ($output->{'data'}->{'social_scores'} as $key=>$val) {
+      $results[$key] = $val;
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns the significant locations for the bitly link or None if locations do not exist
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *   An array of locations
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_link_location($access_token, $link) {
+  $results = array();
+  $url = bitly_oauth_api . "link/location?access_token=" . $access_token . "&link=" . urlencode($link);
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'locations'})) {
+    foreach ($output->{'data'}->{'locations'} as $location) {
+      array_push($results, $location);
+    }
+  }
+  return $results;
+}
+
+/**
+ * Returns the significant languages for the bitly link
+ *
+ * @param $access_token
+ *   The OAuth access token for the user.
+ *
+ * @return
+ *   An associative array containing
+ *   - the link as the key
+ *   - the language as the value
+ *
+ * @see http://dev.bitly.com/data_apis.html
+ */
+function bitly_v3_link_language($access_token, $link) {
+  $results = array();
+  $url = bitly_oauth_api . "link/language?access_token=" . $access_token . "&link=" . urlencode($link);
+  $output = json_decode(bitly_get_curl($url));
+  if (isset($output->{'data'}->{'languages'})) {
+    foreach ($output->{'data'}->{'languages'} as $key=>$val) {
+      $results[$key] = $val;
     }
   }
   return $results;

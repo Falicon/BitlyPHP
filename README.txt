@@ -59,6 +59,28 @@ $results = bitly_v3_user_countries('USERS_ACCESS_TOKEN');
 
 $results = bitly_v3_user_realtime_links('USERS_ACCESS_TOKEN');
 
+$results = bitly_v3_highvalue('USERS_ACCESS_TOKEN');
+
+$results = bitly_v3_search('USERS_ACCESS_TOKEN', 'awesome');
+
+$results = bitly_v3_realtime_bursting_phrases('USERS_ACCESS_TOKEN');
+
+$results = bitly_v3_realtime_hot_phrases('USERS_ACCESS_TOKEN');
+
+$results = bitly_v3_realtime_clickrate('USERS_ACCESS_TOKEN', 'awesome');
+
+$results = bitly_v3_link_info('USERS_ACCESS_TOKEN', 'http://bit.ly/S4qgbT');
+
+$results = bitly_v3_link_content('USERS_ACCESS_TOKEN', 'http://bit.ly/S4qgbT');
+
+$results = bitly_v3_link_category('USERS_ACCESS_TOKEN', 'http://bit.ly/S4qgbT');
+
+$results = bitly_v3_link_social('USERS_ACCESS_TOKEN', 'http://bit.ly/S4qgbT');
+
+$results = bitly_v3_link_location('USERS_ACCESS_TOKEN', 'http://bit.ly/S4qgbT');
+
+$results = bitly_v3_link_language('USERS_ACCESS_TOKEN', 'http://bit.ly/S4qgbT');
+
 =============
 SPECIAL NOTE:
 =============
