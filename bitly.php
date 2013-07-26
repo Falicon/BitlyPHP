@@ -209,11 +209,11 @@ function bitly_v3_clicks($data) {
   if (isset($output->{'data'}->{'clicks'})) {
     foreach ($output->{'data'}->{'clicks'} as $tmp) {
       $rec = array();
-      $rec['short_url'] = $tmp->{'short_url'};
-      $rec['global_hash'] = $tmp->{'global_hash'};
-      $rec['user_clicks'] = $tmp->{'user_clicks'};
-      $rec['user_hash'] = $tmp->{'user_hash'};
-      $rec['global_clicks'] = $tmp->{'global_clicks'};
+      $rec['short_url'] = !empty($tmp->{'short_url'}) ? $tmp->{'short_url'} : '';
+      $rec['global_hash'] = !empty($tmp->{'global_hash'}) ? $tmp->{'global_hash'} : '';
+      $rec['user_clicks'] = !empty($tmp->{'user_clicks'}) ? $tmp->{'user_clicks'} : 0;
+      $rec['user_hash'] = !empty($tmp->{'user_hash'}) ? $tmp->{'user_hash'} : '';
+      $rec['global_clicks'] = !empty($tmp->{'global_clicks'}) ? $tmp->{'global_clicks'} : 0;
       array_push($results, $rec);
     }
   }
