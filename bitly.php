@@ -476,7 +476,7 @@ function bitly_v3_lookup($data) {
   } else {
     $data = urlencode($data);
   }
-  $url = bitly_api . "lookup?login=" . bitlyLogin . "&apiKey=" . bitlyKey . "&format=json&url=" . $data;
+  $url = bitly_oauth_api . "lookup?url=" . $data . "&access_token=" . bitlyKey;
   $output = json_decode(bitly_get_curl($url));
   if (isset($output->{'data'}->{'lookup'})) {
     foreach ($output->{'data'}->{'lookup'} as $tmp) {
