@@ -78,7 +78,7 @@ define('bitly_oauth_access_token', 'https://api-ssl.bit.ly/oauth/');
  */
 function bitly_v3_shorten($longUrl, $domain = '', $x_login = '', $x_apiKey = '') {
   $result = array();
-  $url = bitly_api . "shorten?login=" . bitlyLogin . "&apiKey=" . bitlyKey . "&format=json&longUrl=" . urlencode($longUrl);
+  $url = bitly_oauth_api . "shorten?access_token=" . bitlyKey . "&longUrl=" . urlencode($longUrl);
   if ($domain != '') {
     $url .= "&domain=" . $domain;
   }
