@@ -92,10 +92,8 @@ function bitly_v3_shorten($longUrl, $domain = '', $x_login = '', $x_apiKey = '')
     $result['global_hash'] = $output->{'data'}->{'global_hash'};
     $result['long_url'] = $output->{'data'}->{'long_url'};
     $result['new_hash'] = $output->{'data'}->{'new_hash'};
-    $result['status_code'] = $output->status_code;
-  } else {
-    $result['status_code'] = $output->status_code;
   }
+  $result['status_code'] = $output->status_code;
   return $result;
 }
 
