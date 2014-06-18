@@ -13,22 +13,22 @@
 /**
  * The bitlyKey assigned to your bit.ly account. (http://bit.ly/a/account)
  */
-define('bitlyKey', 'YOUR_BITLY_ASSIGNED_KEY');
+define('bitlyKey', 'R_685583af62c827761fd45d693fb3d617');
 
 /**
  * The bitlyLogin assigned to your bit.ly account. (http://bit.ly/a/account)
  */
-define('bitlyLogin' , 'YOUR_BITLY_LOGIN');
+define('bitlyLogin' , 'falicon');
 
 /**
  * The client_id assigned to your OAuth app. (http://bit.ly/a/account)
  */
-define('bitly_clientid' , 'YOUR_BITLY_ASSIGNED_CLIENT_ID_FOR_OAUTH');
+define('bitly_clientid' , '2f4b1eb5beb9b615ac70b16e34daf4bc6b899112');
 
 /**
  * The client_secret assigned to your OAuth app. (http://bit.ly/a/account)
  */
-define('bitly_secret' , 'YOUR_BITLY_ASSIGNED_CLIENT_SECRET_FOR_OAUTH');
+define('bitly_secret' , '149e58cfb3f5d508386822be40afc8ce75ca1c26');
 
 /**
  * The URI of the standard bitly v3 API.
@@ -55,6 +55,8 @@ define('bitly_oauth_access_token', 'https://api-ssl.bit.ly/oauth/');
  *
  * @param $longUrl
  *   Long URL to be shortened.
+ * @param $access_token
+ *   The OAuth access token for the user.
  * @param $domain
  *   Uses bit.ly (default), j.mp, or a bit.ly pro domain.
  * @param $x_login
@@ -76,9 +78,9 @@ define('bitly_oauth_access_token', 'https://api-ssl.bit.ly/oauth/');
  *
  * @see http://code.google.com/p/bitly-api/wiki/ApiDocumentation#/v3/shorten
  */
-function bitly_v3_shorten($longUrl, $domain = '', $x_login = '', $x_apiKey = '') {
+function bitly_v3_shorten($longUrl, $access_token, $domain = '', $x_login = '', $x_apiKey = '') {
   $result = array();
-  $url = bitly_oauth_api . "shorten?access_token=" . bitlyKey . "&longUrl=" . urlencode($longUrl);
+  $url = bitly_oauth_api . "shorten?access_token=" . $access_token . "&longUrl=" . urlencode($longUrl);
   if ($domain != '') {
     $url .= "&domain=" . $domain;
   }

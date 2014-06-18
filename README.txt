@@ -19,7 +19,7 @@ USAGE:
 
 4. Use any of the functions as such:
 
-$results = bitly_v3_shorten('http://knowabout.it', 'j.mp');
+$results = bitly_v3_shorten('http://knowabout.it', 'USERS_ACCESS_TOKEN', 'j.mp');
 
 $results = bitly_v3_expand('dYhyia');
 
