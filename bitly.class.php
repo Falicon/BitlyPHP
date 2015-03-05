@@ -8,7 +8,8 @@
  * 
  * @link https://github.com/Falicon/BitlyPHP (Original)
  * @link https://github.com/xZero707/BitlyPHP (This)
- * @authors Kevin Marshall <info@falicon.com> | Robin Monks <devlinks@gmail.com>
+ * @author Kevin Marshall <info@falicon.com>
+ * @author Robin Monks <devlinks@gmail.com>
  * @author xZero <xzero@elite7hackers.net> (MOD)
  *  ^ Modifications, optimizations and object oriented adaptation (class)
  */
