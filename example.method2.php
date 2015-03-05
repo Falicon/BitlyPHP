@@ -18,6 +18,13 @@ require_once "bitly.class.php";
 $bitly = new PHPBitlyAPI; // Variable defines instance holder. This will start new instance.
 
 
+// Set keys and tokens
+$bitly->setAPI("API", "YOUR_API_KEY");
+$bitly->setAPI("LOGIN", "YOUR_BITLY_USERNAME");
+$bitly->setAPI("CLIENT->ID", "YOUR_CLIENT_ID");
+$bitly->setAPI("CLIENT->SECRET", "YOUR_CLIENT_SECRET");
+
+// MAIN calls
 $results[] = $bitly->shorten('http://knowabout.it', 'USERS_ACCESS_TOKEN', 'j.mp');
 $results[] = $bitly->expand('dYhyia');
 $results[] = $bitly->expand(array('http://bit.ly/dYhyia','http://j.mp/dYhyia'));
