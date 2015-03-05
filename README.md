@@ -111,7 +111,7 @@ $results = $bitly->link_language('USERS_ACCESS_TOKEN', 'http://bit.ly/S4qgbT');<
 
 =============
 SPECIAL NOTE:
-=============
+==============
 
 To use the new OAuth endpoints, you must first obtain an access token for a user. You do this by passing the user off to bit.ly to approve your apps access to their account...and then you use the return code along with the<br/> bitly_oauth_access_token method to obtain the actual bitly access token:<br/>
 
@@ -121,16 +121,16 @@ To use the new OAuth endpoints, you must first obtain an access token for a user
 
 3. If everything goes correctly, you should now have a $results['access_token'] value that you can use with the oauth requests for that user.
 
-==============
+===============
 SPECIAL THANKS:
-==============
+===============
 
 Kevin Marshall (https://github.com/Falicon) - Original author, for great job he did.<br/>
 Robin Monks (https://github.com/mozillamonks) - for great additional documentation and general suggestions/improvements.<br/>
 
-=======
+========
 CONTACT:
-=======
+========
 
 As always, if you've got any questions, comments, or concerns about<br/>
 anything you find here, please feel free contact me at <br/>
@@ -138,12 +138,13 @@ email: xzero@elite7hackers.net or xzero707@gmail.com<br/>
 Twitter: @xZeroOfficial -> https://twitter.com/xZeroOfficial<br/>
 Facebook: https://www.facebook.com/Aleks.xZero<br/>
 
-Original author:
+Original author:<br/>
+As always, if you've got any questions, comments, or concerns about<br/>
+anything you find here, please feel free to drop me an email at info@falicon.com or find me on Twitter @falicon<br/>
 
-
-=======
+========
 License:
-=======
+========
 
 Object oriented version - Copyright 2015 xZero.<br/>
 Original work - Copyright 2010 Kevin Marshall<br/>
