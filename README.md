@@ -67,7 +67,10 @@ https://bit.ly/oauth/authorize?client_id=YOUR_BITLY_CLIENT_ID&redirect_uri=THE_U
 2. a code ($_REQUEST['code']) will be supplied as a param to the url Bit.ly redirects to. So you can then execute:
 
 ```php
-$results = bitly_oauth_access_token($_REQUEST['code'], 'THE_URL_YOU_WANT_BITLY_TO_REDIRECT_TO_WHEN_APP_IS_APPROVED_BY_USER', 'YOUR_BITLY_APP_CLIENT_ID', 'YOUR_BITLY_APP_CLIENT_SECRET');
+$results = bitly_oauth_access_token($_REQUEST['code'],
+  'THE_URL_YOU_WANT_BITLY_TO_REDIRECT_TO_WHEN_APP_IS_APPROVED_BY_USER',
+  'YOUR_BITLY_APP_CLIENT_ID',
+  'YOUR_BITLY_APP_CLIENT_SECRET');
 ```
 
 3. If everything goes correctly, you should now have a $results['access_token'] value that you can use with the oauth requests for that user.
