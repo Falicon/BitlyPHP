@@ -23,7 +23,7 @@ USAGE:
 EXAMPLES:
 =============
 
-```
+```php
 include_once('bitly.php');
 $params = array();
 $params['access_token'] = 'THE_TOKEN_SET_VIA_OAUTH';
@@ -33,7 +33,7 @@ $results = bitly_get('shorten', $params);
 var_dump($results);
 ```
 
-```
+```php
 $params = array();
 $params['access_token'] = 'THE_TOKEN_SET_VIA_OAUTH';
 $params['url'] = 'http://knowabout.it';
@@ -43,7 +43,7 @@ var_dump($results);
 
 a slightly more complex example with complex params (simply pass a third param of true when dealing with complex params):
 
-```
+```php
 $params = array();
 $params['access_token'] = 'THE_TOKEN_SET_VIA_OAUTH';
 $params['hash'] = array('dYhyia','dYhyia','abc123');
