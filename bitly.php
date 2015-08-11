@@ -99,7 +99,7 @@ function bitly_get($endpoint, $params, $complex=false) {
     $url = bitly_oauth_api . $endpoint . "?" . http_build_query($params);
   }
 
-  echo $url . "\n";
+  //echo $url . "\n";
 
   $result = json_decode(bitly_get_curl($url), true);
 
