@@ -197,7 +197,7 @@ function bitly_get_curl($uri) {
 function bitly_post_curl($uri, $fields, $header_array = array()) {
   $output = "";
   $fields_string = "";
-  foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+  foreach($fields as $key=>$value) { $fields_string .= $key.'='.urlencode($value).'&'; }
   rtrim($fields_string,'&');
   try {
     $ch = curl_init($uri);
