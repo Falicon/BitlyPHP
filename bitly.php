@@ -63,6 +63,47 @@ function bitly_oauth_access_token($code, $redirect, $client_id, $client_secret) 
 }
 
 /**
+ * Returns an OAuth access token via the user's bit.ly login Username and Password
+ *
+ * @param $username
+ *   The user's Bitly username
+ * @param $redirect
+ *   The user's Bitly password
+ * @param $client_id
+ *   The client_id assigned to your OAuth app. (http://bit.ly/a/account)
+ * @param $client_secret
+ *   The client_secret assigned to your OAuth app. (http://bit.ly/a/account)
+ *
+ * @return
+ *   An associative array containing:
+ *   - access_token: The OAuth access token for specified user.
+ *
+ */
+ 
+function bitly_oauth_access_token_via_password($username, $password, $client_id, $client_secret) {
+  $results = array();
+  $url = bitly_oauth_access_token . "access_token";
+  
+  $headers = array();
+  $headers[] = 'Authorization: Basic '.base64_encode($client_id . ":" . $client_secret);
+    
+  $params = array();
+  $params['grant_type'] = "password";
+  $params['username'] = $username;
+  $params['password'] = $password;
+  
+  $output = bitly_post_curl($url, $params, $headers);
+  
+  $decoded_output = json_decode($output,1);
+
+  $results = array(
+  	"access_token" => $decoded_output['access_token']
+  );
+  
+  return $results;
+}
+
+/**
  * Format a GET call to the bit.ly API.
  *
  * @param $endpoint
@@ -153,13 +194,18 @@ function bitly_get_curl($uri) {
  * @param $fields
  *   Array of fields to send.
  */
-function bitly_post_curl($uri, $fields) {
+function bitly_post_curl($uri, $fields, $header_array = array()) {
   $output = "";
   $fields_string = "";
   foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
   rtrim($fields_string,'&');
   try {
     $ch = curl_init($uri);
+    
+    if(is_array($header_array) && !empty($header_array)){
+    	curl_setopt($ch, CURLOPT_HTTPHEADER, $header_array);
+    }
+    
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch,CURLOPT_POST,count($fields));
     curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
