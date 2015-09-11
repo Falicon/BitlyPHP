@@ -67,7 +67,7 @@ function bitly_oauth_access_token($code, $redirect, $client_id, $client_secret) 
  *
  * @param $username
  *   The user's Bitly username
- * @param $redirect
+ * @param $password
  *   The user's Bitly password
  * @param $client_id
  *   The client_id assigned to your OAuth app. (http://bit.ly/a/account)
